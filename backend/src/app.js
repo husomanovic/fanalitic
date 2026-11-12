@@ -3,6 +3,7 @@ import cors from 'cors';
 import ticketRoutes from './routes/tickets.js';
 import reviewRoutes from './routes/reviews.js';
 import analyticsRoutes from './routes/analytics.js';
+import catalogRoutes from './routes/catalog.js';
 import { authStore } from './auth/store.js';
 import { createAuthRouter } from './auth/routes.js';
 import { requireAdmin } from './auth/session.js';
@@ -24,6 +25,7 @@ export function createApp({ secret, origin, production = false, store = authStor
   app.use('/api/tickets', ticketRoutes);
   app.use('/api/reviews', reviewRoutes);
   app.use('/api/analytics', requireAdmin(store, secret), analyticsRoutes);
+  app.use('/api/catalog', requireAdmin(store, secret), catalogRoutes);
   app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
   app.use((error, req, res, next) => {
     if (error.type === 'entity.parse.failed') return res.status(400).json({ message: 'Invalid JSON.' });

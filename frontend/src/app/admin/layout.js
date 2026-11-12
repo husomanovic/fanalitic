@@ -1,9 +1,15 @@
 import { Suspense } from "react";
+import Admin from "@/components/Admin";
 import { requireAdmin } from "@/lib/auth";
+
+export const metadata = {
+  title: "Admin | FanAnalitic",
+  description: "FanAnalitic admin panel",
+};
 
 async function AuthenticatedAdmin({ children }) {
   await requireAdmin();
-  return children;
+  return <Admin>{children}</Admin>;
 }
 
 export default function AdminLayout({ children }) {
