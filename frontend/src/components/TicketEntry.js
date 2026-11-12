@@ -42,15 +42,19 @@ export default function TicketEntry() {
     setError("");
 
     try {
-      const response = await fetch(`/api/tickets/${encodeURIComponent(ticketCode)}`);
+      const response = await fetch(`/api/tickets/${encodeURIComponent(ticketCode)}/eligibility`, { cache: "no-store" });
       const data = await response.json().catch(() => ({}));
 
-      if (!response.ok) {
-        throw new Error(data.message || "Ticket not found");
+      if (response.status === 409 || data.review_used === true || data.reason === "ALREADY_REVIEWED") {
+        throw new Error("Ticket already used for review.");
       }
 
-      if (data.review_used) {
-        throw new Error("This ticket has already been used for a review.");
+      if (!response.ok) {
+        throw new Error(data.message || (response.status === 404 ? "Ticket not found." : "Unable to check ticket. Please try again."));
+      }
+
+      if (data.can_review !== true || !data.ticket) {
+        throw new Error("Unable to confirm ticket eligibility. Please try again.");
       }
 
       stopScan();

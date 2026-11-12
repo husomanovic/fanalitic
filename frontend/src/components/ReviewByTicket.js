@@ -32,25 +32,32 @@ export default function ReviewByTicket() {
       setStatus("loading");
       try {
         const response = await fetch(
-          `/api/tickets/${encodeURIComponent(ticketCode)}`,
+          `/api/tickets/${encodeURIComponent(ticketCode)}/eligibility`,
+          { cache: "no-store" },
         );
         const data = await response.json().catch(() => ({}));
 
         if (cancelled) return;
 
+        if (response.status === 409 || data.review_used === true || data.reason === "ALREADY_REVIEWED") {
+          setStatus("used");
+          setMessage("Ticket already used for review.");
+          return;
+        }
+
         if (!response.ok) {
           setStatus("error");
-          setMessage(data.message || "Ticket not found");
+          setMessage(data.message || (response.status === 404 ? "Ticket not found." : "Unable to check ticket. Please try again."));
           return;
         }
 
-        if (data.review_used) {
-          setStatus("used");
-          setMessage("This ticket has already been used for a review.");
+        if (data.can_review !== true || !data.ticket) {
+          setStatus("error");
+          setMessage("Unable to confirm ticket eligibility. Please try again.");
           return;
         }
 
-        setTicket(data);
+        setTicket(data.ticket);
         setStatus("ready");
       } catch {
         if (!cancelled) {
@@ -85,7 +92,7 @@ export default function ReviewByTicket() {
         ) : (
           <>
             <h1 className="font-[family-name:var(--font-sora)] text-2xl font-semibold tracking-tight">
-              {status === "used" ? "Review already submitted" : "Ticket not available"}
+              {status === "used" ? "Ticket already used for review" : "Ticket not available"}
             </h1>
             <p className="mt-3 text-sm leading-relaxed" style={{ color: "var(--muted)" }}>
               {message}
