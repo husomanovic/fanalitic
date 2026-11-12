@@ -154,12 +154,6 @@ FanAnalitic/
       utils/
 ```
 
-## Dashboard API
-
-See [Visualization and endpoint guide](./VISUALISATION_INTRO.md) for the implemented analytics routes, filters, response contracts, and recommended charts. [Snowflake schema](./SNOWFLAKE_SCHEMA.md) describes the warehouse sources.
-
-Start the API with `cd backend`, `npm install`, then `npm run dev` after configuring Snowflake credentials in `backend/.env`. Run backend checks with `npm test`.
-
 ## Registration and admin authentication
 
 Anyone can register at `/register` and receive access to the admin panel. The login
