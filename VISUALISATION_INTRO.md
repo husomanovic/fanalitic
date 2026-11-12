@@ -97,7 +97,7 @@ const summary = data[0]; // summary.AVG_SCORE, summary.SATISFACTION_PCT
 
 ## Data engineering semantics and limits
 
-New submissions travel through ingestion → enrichment → read-ready tasks. A 202 review submission does not mean the dashboard has refreshed yet. INGESTED_AT is pipeline ingestion time, not necessarily when the fan submitted the review. LATEST_INGESTED_AT is not a task-health signal: an idle pipeline and a stalled pipeline can look the same. This API does not inspect task failures or compute ingestion latency.
+New web submissions are inserted directly into READ_READY.REVIEWS_FACT. HTTP 201 confirms the save; refreshing the dashboard reads the new row without waiting for tasks. INGESTED_AT is the database save time for direct writes; for legacy records it remains pipeline ingestion time. LATEST_INGESTED_AT is not a task-health signal: an idle pipeline and a stalled pipeline can look the same. This API does not inspect task failures or compute ingestion latency.
 
 TIMESTAMP_NTZ has no timezone. Agree on the dataset's time convention before formatting local dates; do not silently claim UTC. The API groups trends using Snowflake's timestamps.
 

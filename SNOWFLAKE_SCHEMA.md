@@ -16,7 +16,7 @@ This document describes the tables and columns currently shared from `FANLYTICS_
 | List clubs and logos | `PUBLIC_APP.TEAMS` | `LOGO_URL` may be null. |
 | List stadiums | `PUBLIC_APP.STADIUMS` | Stadium capacities are present. |
 | Match fixtures and scores | `PUBLIC_APP.GAMES` | Foreign-key ID columns link to team and stadium tables. |
-| Seeded operational review records | `PUBLIC_APP.REVIEWS` | **Do not assume this receives new web-form reviews.** Current Node.js API writes to `INGESTION.REVIEWS_IN`; the pipeline populates `READ_READY.REVIEWS_FACT`. |
+| Seeded operational review records | `PUBLIC_APP.REVIEWS` | **Do not assume this receives new web-form reviews.** Current Node.js API writes directly to `READ_READY.REVIEWS_FACT`. |
 | Admin users | `PUBLIC_APP.USERS` | Sensitive: `PASSWORD_HASH` should never be exposed by public API endpoints. |
 | Seed-generation helper | `PUBLIC_APP.FANLYTICS_SEED_CLUBS` | Supporting table, **not** recommended as an application API source. |
 
@@ -269,26 +269,33 @@ const sections = await query(`
 - Return explicit columns from APIs rather than exposing sensitive fields (`PASSWORD_HASH`, raw ticket identifiers where unnecessary).
 - For dashboard charts, prefer `READ_READY`; for ticket validation, prefer `PUBLIC_APP`.
 
-## New review ingestion vs seeded reviews
-
-The current intended application pipeline is:
+## Current web review flow — direct read-ready writes
 
 ```text
 POST /api/reviews (Node.js)
-  -> INGESTION.REVIEWS_IN (RAW_DATA VARIANT)
-  -> INGESTION.REVIEWS_IN_STREAM
-  -> TASK_ENRICH_REVIEWS
-  -> ENRICHMENT.REVIEWS_ENRICHED
-  -> ENRICHMENT.REVIEWS_ENRICHED_STREAM
-  -> TASK_BUILD_READ_READY
-  -> READ_READY.REVIEWS_FACT
-  -> TASK_REFRESH_METRICS
-  -> READ_READY.GAME_METRICS
+  -> validate seven scores and ticket eligibility
+  -> join PUBLIC_APP ticket/game/team/stadium reference records
+  -> INSERT INTO READ_READY.REVIEWS_FACT
+  -> HTTP 201: Review saved successfully
+  -> analytics endpoints read the saved row on the next request
 ```
 
-`PUBLIC_APP.REVIEWS` is a separate table. Unless you add synchronization, new reviews arriving via ingestion **will not automatically be inserted into `PUBLIC_APP.REVIEWS`**. For fan-submitted reviews and dashboard analytics, use `READ_READY.REVIEWS_FACT` as the read source after the pipeline runs. The ingestion process is asynchronous, so results may not be visible immediately.
+The API writes ticket ID/code, game ID/date, both team names, stadium ID/name/city, section/row/seat, all seven scores, feedback text and current save time as `INGESTED_AT`. Match metadata comes from Snowflake, not the request body. The API role needs INSERT on `READ_READY.REVIEWS_FACT` in addition to its existing SELECT privileges. No review is inserted into `PUBLIC_APP.REVIEWS` or `INGESTION.REVIEWS_IN` by the current web form.
 
-> **Caution for live demos:** The synthetic dataset may already include a review for every generated ticket. Use new unreviewed tickets to demonstrate form submission. Because standard Snowflake tables do not enforce `UNIQUE` keys, server-side existence checks alone are not fully race-safe for concurrent submissions.
+Dashboard queries aggregate `REVIEWS_FACT` directly, including `/games`. `GAME_METRICS` is not synchronously updated by submission; its existing refresh task and `/freshness` timestamp remain separate from the current dashboard statistics.
+
+### Legacy pipeline and transition
+
+The previous path remains available for historical/pending events and future Kafka integration:
+
+```text
+INGESTION.REVIEWS_IN -> streams/tasks -> ENRICHMENT.REVIEWS_ENRICHED
+  -> streams/tasks -> READ_READY.REVIEWS_FACT -> TASK_REFRESH_METRICS
+```
+
+This application change does not drop, suspend or modify Snowflake tasks/streams, and does not replay pending events. Eligibility still checks `PUBLIC_APP.REVIEWS`, `REVIEWS_FACT`, and old `REVIEWS_IN` records to reject already-used tickets. Do not purge pending events merely to free their tickets. Before running both writers, verify that existing task definitions preserve direct-write rows (no table replacement/truncation) and do not duplicate existing ticket reviews.
+
+The check and insert remain separate operations, so concurrent submissions can race on standard Snowflake tables. The synthetic dataset may already include a review for every generated ticket; use genuinely unreviewed tickets for demos.
 
 ## Notes / limitations
 

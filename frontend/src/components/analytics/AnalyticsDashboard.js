@@ -93,6 +93,6 @@ export default function AnalyticsDashboard() {
       </tbody></table></div>
     </ChartCard>
     <div className={styles.pagination}><button disabled={page === 0 || reviews.loading} onClick={() => setPage(value => value - 1)}>Previous</button><span>Page {page + 1}</span><button disabled={!reviews.meta?.hasMore || reviews.loading} onClick={() => setPage(value => value + 1)}>Next</button></div>
-    <p className={styles.context}>Latest review ingestion: {summary?.LATEST_INGESTED_AT ? String(summary.LATEST_INGESTED_AT) : 'Not available'}. New reviews appear after the Snowflake pipeline processes them.</p>
+    <p className={styles.context}>Latest review ingestion: {summary?.LATEST_INGESTED_AT ? String(summary.LATEST_INGESTED_AT) : 'Not available'}. Saved reviews appear when you refresh the dashboard.</p>
   </div>;
 }

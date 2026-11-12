@@ -36,14 +36,14 @@ test('unused ticket returns true and match information; used ticket returns fals
   }
 });
 
-test('HTTP eligibility and submission use the same check, including pending ingestion', async t => {
+test('direct fact submission immediately marks the ticket used', async t => {
   let used = false;
   let writes = 0;
   let fail = false;
   const query = async (sql, binds) => {
     if (fail) throw new Error('private database detail');
+    if (sql.includes('INSERT INTO')) { writes++; used = true; assert.match(sql, /INSERT INTO READ_READY.REVIEWS_FACT/); assert.equal(binds.at(-1),'ABC'); return [{ 'number of rows inserted': 1 }]; }
     if (sql.includes('FROM PUBLIC_APP.TICKETS')) return binds[0] === 'MISSING' ? [] : [ticket];
-    if (sql.includes('INSERT INTO')) { writes++; used = true; assert.equal(JSON.parse(binds[0]).ticket_code,'ABC'); return []; }
     return used ? [{FLAG:1}] : [];
   };
   const app = express();
@@ -65,7 +65,7 @@ test('HTTP eligibility and submission use the same check, including pending inge
   assert.equal(response.status,400);
   const review = { ticket_code:' ABC ', ...Object.fromEntries(['overall','security','organization','family_friendly','experience','comfort','game'].map(key=>[`${key}_score`,4])) };
   const post = () => fetch(`${base}/api/reviews`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(review)});
-  assert.equal((await post()).status,202);
+  assert.equal((await post()).status,201);
   response = await fetch(`${base}/api/tickets/ABC/eligibility`);
   assert.equal((await response.json()).can_review,false);
   assert.equal((await post()).status,409);
