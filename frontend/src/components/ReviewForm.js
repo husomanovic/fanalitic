@@ -57,6 +57,7 @@ export default function ReviewForm({ ticketCode, ticket = null }) {
     ? `${ticket.HOME_TEAM || "Home"} vs ${ticket.AWAY_TEAM || "Away"}`
     : null;
   const stadiumLabel = ticket?.STADIUM || null;
+  const gameDateLabel = ticket?.GAME_DATE ? String(ticket.GAME_DATE).replace("T", " ").slice(0, 16) : null;
 
   const average =
     SCORE_FIELDS.reduce((sum, field) => sum + Number(scores[field.key]), 0) /
@@ -95,6 +96,10 @@ export default function ReviewForm({ ticketCode, ticket = null }) {
       });
 
       const data = await response.json().catch(() => ({}));
+
+      if (response.status === 409 || data.reason === "ALREADY_REVIEWED" || data.review_used === true) {
+        throw new Error("Ticket already used for review.");
+      }
 
       if (!response.ok) {
         throw new Error(data.message || "Failed to submit review");
@@ -170,6 +175,7 @@ export default function ReviewForm({ ticketCode, ticket = null }) {
               {stadiumLabel ? ` · ${stadiumLabel}` : ""}
             </p>
           ) : null}
+          {gameDateLabel ? <p className="mt-2 text-sm" style={{ color: "var(--muted)" }}>Game date: {gameDateLabel}</p> : null}
         </div>
         <p
           className="mt-3 max-w-xl text-sm leading-relaxed sm:text-base lg:mt-0 lg:justify-self-end lg:text-right"
