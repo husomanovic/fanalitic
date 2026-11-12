@@ -37,7 +37,7 @@ A ticket counts as used if a matching review exists in **any** of:
 
 - `PUBLIC_APP.REVIEWS` by ticket ID (the operational/seeded reviews table).
 - `READ_READY.REVIEWS_FACT` by ticket ID or ticket code.
-- `INGESTION.REVIEWS_IN` by `RAW_DATA:ticket_code` (including submissions awaiting pipeline processing).
+- `INGESTION.REVIEWS_IN` by `RAW_DATA:ticket_code` (legacy submissions awaiting pipeline processing; new reviews bypass this table).
 
 A missing ticket returns HTTP 404 with `can_review: false`, `review_used: false`, `reason: "TICKET_NOT_FOUND"`, and `ticket: null`. Invalid codes return 400. Database failures return 500 with `can_review: false`; display a retry message, not “already used.” Responses use `Cache-Control: no-store`.
 
@@ -59,7 +59,7 @@ if (result.can_review) {
 
 The original `GET /api/tickets/:ticketCode` still returns flat ticket fields plus `review_used` and now `can_review`.
 
-`POST /api/reviews` repeats this check before inserting, so bypassing the eligibility page does not bypass the check. It returns 409 for a used ticket and 202 for an accepted submission. The check and insert are separate operations: concurrent submissions can still race on standard Snowflake tables. This is an eligibility check, not an atomic ticket reservation. Pending ingestion rows are treated as used even if enrichment later fails; resolution of failed ingestion requires an explicit operational process.
+`POST /api/reviews` repeats this check before inserting, so bypassing the eligibility page does not bypass the check. It returns 409 for a used ticket and 201 after the review is saved directly in `READ_READY.REVIEWS_FACT`. The row includes all seven scores, feedback, and ticket/game/stadium metadata joined from reference tables. New web submissions do not write ingestion JSON or wait for tasks. The check and insert are separate operations: concurrent submissions can still race on standard Snowflake tables. This is an eligibility check, not an atomic ticket reservation. Pending ingestion rows are treated as used even if enrichment later fails; resolution of failed ingestion requires an explicit operational process.
 
 ## Connected frontend
 

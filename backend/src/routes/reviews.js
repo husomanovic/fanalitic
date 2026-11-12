@@ -1,4 +1,5 @@
 import express from 'express';
+import { insertReviewFact } from '../repositories/reviewRepository.js';
 import { query } from '../config/snowflake.js';
 import { getTicketEligibility, normalizeTicketCode } from '../services/ticketEligibilityService.js';
 
@@ -62,19 +63,10 @@ export function createReviewRouter(runQuery = query) {
         });
       }
 
-      await runQuery(`
-        INSERT INTO INGESTION.REVIEWS_IN (RAW_DATA)
-        SELECT PARSE_JSON(?)
-      `, [JSON.stringify({
-        ticket_code: ticketCode,
-        ...Object.fromEntries(
-          ratingFields.map(f => [f, review[f]])
-        ),
-        feedback_text: review.feedback_text || ''
-      })]);
+      await insertReviewFact(review, ticketCode, runQuery);
 
-      return res.status(202).json({
-        message: 'Review accepted for processing'
+      return res.status(201).json({
+        message: 'Review saved successfully'
       });
 
     } catch (error) {

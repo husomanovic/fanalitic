@@ -23,7 +23,8 @@ export async function getTicketEligibility(value, query) {
 
   if (!tickets.length) return { can_review: false, review_used: false, reason: 'TICKET_NOT_FOUND', ticket: null };
   const ticket = tickets[0];
-  // Include raw submissions because the read-ready pipeline is asynchronous.
+  // Retain protection for older submissions still in the legacy ingestion pipeline.
+  // New web reviews are inserted directly into REVIEWS_FACT.
   const used = await query(`
     SELECT 1 AS FLAG FROM PUBLIC_APP.REVIEWS WHERE TICKET_ID = ?
     UNION ALL
