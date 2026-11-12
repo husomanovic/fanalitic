@@ -120,6 +120,9 @@
 }
 
 .toolbar {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
   display: flex;
   justify-content: flex-end;
   padding: 20px;
