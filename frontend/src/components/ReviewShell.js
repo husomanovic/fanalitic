@@ -27,11 +27,10 @@ function BrandMark() {
         sizes="(max-width: 640px) 144px, (max-width: 1024px) 176px, 208px"
       />
       <Image
-        src="/logo-dark-removebg.png"
-        alt=""
+        src="/logo-blue-gray-removebg.png"
+        alt="FanAnalitic"
         fill
         priority
-        aria-hidden
         className="brand-logo-dark object-contain object-left"
         sizes="(max-width: 640px) 144px, (max-width: 1024px) 176px, 208px"
       />

@@ -7,7 +7,10 @@
   }
 </style>
 
-<img src="frontend/public/logo-readme.png" alt="FanAnalitic logo" width="100%" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="frontend/public/logo-blue-gray-removebg.png" />
+  <img src="frontend/public/logo-blue-white-removebg.png" alt="FanAnalitic logo" width="320" />
+</picture>
 
 # FanAnalitic
 
