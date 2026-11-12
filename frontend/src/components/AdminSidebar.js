@@ -23,16 +23,16 @@ export default function AdminSidebar() {
         <Image
           src="/logo-blue-white-removebg.png"
           alt="FanAnalitic"
-          width={612}
-          height={408}
+          width={1024}
+          height={1024}
           priority
           className={`${styles.logo} ${styles.logoLight}`}
         />
         <Image
-          src="/logo-dark-removebg.png"
-          alt=""
-          width={612}
-          height={408}
+          src="/logo-blue-gray-removebg.png"
+          alt="FanAnalitic"
+          width={410}
+          height={410}
           priority
           className={`${styles.logo} ${styles.logoDark}`}
         />

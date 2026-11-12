@@ -271,3 +271,99 @@
     grid-template-columns: 1fr;
   }
 }
+
+.cardHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.chartTypeLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--admin-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.chartSelect {
+  min-width: 110px;
+  max-width: 100%;
+  min-height: 36px;
+  padding: 6px 10px;
+  border: 1px solid var(--admin-line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--admin-navy);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.chartSelect:focus-visible {
+  outline: 2px solid var(--admin-blue);
+  outline-offset: 3px;
+}
+
+.chartEmpty {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  text-align: center;
+}
+
+:global(.dark) .chartSelect {
+  background: #10233b;
+  border-color: #253c58;
+}
+
+.cardControls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.stadiumLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+  color: var(--admin-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.stadiumLabel select {
+  width: clamp(140px, 20vw, 270px);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.sectionSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 0 0 16px;
+  color: var(--admin-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sectionState {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 10px;
+  min-height: 240px;
+  color: var(--admin-muted);
+  text-align: center;
+}

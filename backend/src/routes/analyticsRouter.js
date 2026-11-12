@@ -1,8 +1,10 @@
 import express from 'express';
+import { createStadiumSectionsRouter } from './stadiumSectionsRouter.js';
 import { analyticsController } from '../controllers/analyticsController.js';
 
 export function createAnalyticsRouter(query) {
   const router = express.Router();
+  router.use('/stadium-sections', createStadiumSectionsRouter(query));
   // Mounted at /api/analytics in src/server.js. All endpoints below use GET.
   router.get('/summary', analyticsController('summary', query));
   router.get('/games', analyticsController('games', query, { legacy: true }));

@@ -13,16 +13,16 @@ export default function LoginScreen({ mode = "login" }) {
         <Image
           src="/logo-blue-white-removebg.png"
           alt="FanAnalitic"
-          width={612}
-          height={408}
+          width={1024}
+          height={1024}
           priority
           className="mx-auto h-auto w-48 dark:hidden"
         />
         <Image
-          src="/logo-dark-removebg.png"
-          alt=""
-          width={612}
-          height={408}
+          src="/logo-blue-gray-removebg.png"
+          alt="FanAnalitic"
+          width={410}
+          height={410}
           priority
           className="mx-auto hidden h-auto w-48 dark:block"
         />

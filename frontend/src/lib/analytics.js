@@ -1,7 +1,7 @@
 const API = "/backend-api";
 
-async function readJson(path) {
-  const response = await fetch(`${API}${path}`, { cache: "no-store" });
+async function readJson(path, signal) {
+  const response = await fetch(`${API}${path}`, { cache: "no-store", signal });
 
   if (!response.ok) {
     throw new Error("The analytics API did not respond.");
@@ -62,4 +62,26 @@ export async function fetchGames() {
 export async function fetchSections(gameId) {
   const rows = await readJson(`/analytics/sections/${gameId}`);
   return (Array.isArray(rows) ? rows : []).map(normalizeSection);
+}
+
+
+export async function fetchStadiumSections(stadiumId = "all", signal) {
+  const params = new URLSearchParams();
+  if (stadiumId !== "all") params.set("stadiumId", String(stadiumId));
+  const result = await readJson("/analytics/stadium-sections" + (params.size ? "?" + params.toString() : ""), signal);
+  const score = value => value == null ? null : number(value);
+  return {
+    stadiums: (result.stadiums || []).map(row => ({
+      id: number(field(row, "STADIUM_ID")),
+      name: String(field(row, "STADIUM_NAME") || "Stadium"),
+      city: String(field(row, "STADIUM_CITY") || ""),
+    })),
+    sections: (result.sections || []).map(normalizeSection),
+    summary: {
+      reviews: number(field(result.summary || {}, "REVIEW_COUNT")),
+      matches: number(field(result.summary || {}, "MATCH_COUNT")),
+      overall: score(field(result.summary || {}, "AVG_OVERALL")),
+      security: score(field(result.summary || {}, "AVG_SECURITY")),
+    },
+  };
 }
