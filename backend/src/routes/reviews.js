@@ -62,6 +62,26 @@ router.post('/', async (req, res) => {
       });
     }
 
+    const factUsed = await query(`
+      SELECT 1 AS FLAG
+      FROM READ_READY.REVIEWS_FACT
+      WHERE TICKET_CODE = ?
+      LIMIT 1
+    `, [review.ticket_code]);
+
+    const seededUsed = await query(`
+      SELECT 1 AS FLAG
+      FROM PUBLIC_APP.REVIEWS
+      WHERE TICKET_ID = ?
+      LIMIT 1
+    `, [tickets[0].ID]);
+
+    if (factUsed.length > 0 || seededUsed.length > 0) {
+      return res.status(409).json({
+        message: 'This ticket has already been used for a review'
+      });
+    }
+
     await query(`
       INSERT INTO INGESTION.REVIEWS_IN (RAW_DATA)
       SELECT PARSE_JSON(?)

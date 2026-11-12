@@ -38,7 +38,31 @@ router.get('/:barcode', async (req, res) => {
       });
     }
 
-    return res.json(rows[0]);
+    const ticket = rows[0];
+
+    const factUsed = await query(`
+      SELECT 1 AS FLAG
+      FROM READ_READY.REVIEWS_FACT
+      WHERE TICKET_CODE = ?
+      LIMIT 1
+    `, [barcode]);
+
+    let reviewUsed = factUsed.length > 0;
+
+    if (!reviewUsed) {
+      const seededUsed = await query(`
+        SELECT 1 AS FLAG
+        FROM PUBLIC_APP.REVIEWS
+        WHERE TICKET_ID = ?
+        LIMIT 1
+      `, [ticket.TICKET_ID]);
+      reviewUsed = seededUsed.length > 0;
+    }
+
+    return res.json({
+      ...ticket,
+      review_used: reviewUsed
+    });
 
   } catch (error) {
     console.error(error);

@@ -13,6 +13,18 @@
   --on-brand: #ffffff;
   --field: #ffffff;
   --danger: #9f1239;
+
+  --bg-soft: #e8eef8;
+  --surface: #ffffff;
+  --primary: #1d4ed8;
+  --primary-hover: #1e3a8a;
+  --primary-soft: #dbe7ff;
+  --text: #0a0a0a;
+  --border: rgba(10, 10, 10, 0.16);
+  --track: #d9e2f2;
+  --success: #0e7a4f;
+  --shadow: 0 18px 50px rgba(29, 78, 216, 0.12);
+  --glow: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(29, 78, 216, 0.18), transparent);
   color-scheme: light;
 }
 
@@ -27,6 +39,18 @@
   --on-brand: #ffffff;
   --field: #08183d;
   --danger: #fda4af;
+
+  --bg-soft: #0a1a33;
+  --surface: #0c214d;
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --primary-soft: #14325a;
+  --text: #ffffff;
+  --border: rgba(255, 255, 255, 0.16);
+  --track: #152a48;
+  --success: #3dd68c;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  --glow: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.18), transparent);
   color-scheme: dark;
 }
 
@@ -44,8 +68,249 @@
   --font-sans: var(--font-geist-sans);
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
+  margin: 0;
+  min-height: 100%;
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-geist-sans), sans-serif;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.page-shell {
+  position: relative;
+  color: var(--text);
+  font-family: var(--font-manrope), var(--font-geist-sans), sans-serif;
+  padding:
+    max(1.25rem, env(safe-area-inset-top))
+    max(1rem, env(safe-area-inset-right))
+    max(1.75rem, env(safe-area-inset-bottom))
+    max(1rem, env(safe-area-inset-left));
+}
+
+.page-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("/sports-pattern.jpg");
+  background-repeat: repeat;
+  background-position: top left;
+  background-size: 420px auto;
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@media (min-width: 768px) {
+  .page-shell::before {
+    background-size: 520px auto;
+  }
+}
+
+@media (min-width: 1280px) {
+  .page-shell::before {
+    background-size: 640px auto;
+  }
+}
+
+@media (min-width: 640px) {
+  .page-shell {
+    padding-left: max(1.5rem, env(safe-area-inset-left));
+    padding-right: max(1.5rem, env(safe-area-inset-right));
+    padding-top: max(1.75rem, env(safe-area-inset-top));
+    padding-bottom: max(2.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-shell {
+    padding-left: max(2rem, env(safe-area-inset-left));
+    padding-right: max(2rem, env(safe-area-inset-right));
+    padding-top: max(2.25rem, env(safe-area-inset-top));
+    padding-bottom: max(3rem, env(safe-area-inset-bottom));
+  }
+}
+
+.panel {
+  border-radius: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+@media (min-width: 640px) {
+  .panel {
+    border-radius: 1.5rem;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary) 35%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 14px transparent;
+  }
+}
+
+.animate-rise {
+  animation: rise-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-rise-delay-1 {
+  animation: rise-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
+
+.animate-rise-delay-2 {
+  animation: rise-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.16s both;
+}
+
+.animate-success {
+  animation: fade-scale 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.brand-logo-dark {
+  display: none;
+}
+
+.dark .brand-logo-light {
+  display: none;
+}
+
+.dark .brand-logo-dark {
+  display: block;
+}
+
+.score-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--primary) 0%,
+    var(--primary) var(--fill, 50%),
+    var(--track) var(--fill, 50%),
+    var(--track) 100%
+  );
+  outline: none;
+  cursor: pointer;
+  touch-action: none;
+  transition: background 0.15s ease;
+}
+
+.score-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 3px solid var(--primary);
+  box-shadow: 0 2px 8px rgba(11, 31, 54, 0.2);
+  transition: transform 0.15s ease;
+}
+
+.score-slider::-webkit-slider-thumb:active {
+  transform: scale(1.12);
+  animation: pulse-ring 0.45s ease-out;
+}
+
+.score-slider::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 3px solid var(--primary);
+  box-shadow: 0 2px 8px rgba(11, 31, 54, 0.2);
+  cursor: pointer;
+}
+
+.score-slider::-moz-range-track {
+  height: 10px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+@media (min-width: 768px) {
+  .score-slider {
+    height: 8px;
+  }
+
+  .score-slider::-webkit-slider-thumb {
+    width: 22px;
+    height: 22px;
+  }
+
+  .score-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (pointer: fine) {
+  .score-slider:hover::-webkit-slider-thumb {
+    transform: scale(1.06);
+  }
+}
+
+.submit-band {
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--primary-soft) 80%, var(--surface)) 0%,
+      var(--surface) 55%,
+      var(--surface) 100%
+    );
+}
+
+.pulse-ring {
+  --pulse: 50%;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 4.25rem;
+  height: 4.25rem;
+  border-radius: 999px;
+  color: var(--primary);
+  background:
+    radial-gradient(circle at center, var(--surface) 62%, transparent 63%),
+    conic-gradient(var(--primary) var(--pulse), var(--track) 0);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--border) 70%, transparent);
+  transition: background 0.25s ease;
+}
+
+@media (min-width: 640px) {
+  .pulse-ring {
+    width: 4.75rem;
+    height: 4.75rem;
+  }
 }
