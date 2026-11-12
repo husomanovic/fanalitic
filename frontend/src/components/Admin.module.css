@@ -1,0 +1,252 @@
+.shell {
+  --admin-navy: #10345a;
+  --admin-blue: #237eac;
+  --admin-muted: #637386;
+  --admin-line: #dce4ec;
+  display: flex;
+  min-height: 100dvh;
+  background: #f4f7fa;
+  color: var(--admin-navy);
+}
+
+.sidebar {
+  display: flex;
+  flex: 0 0 260px;
+  flex-direction: column;
+  border-right: 1px solid var(--admin-line);
+  background: #fff;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  margin: 0 24px;
+  padding: 36px 0 28px;
+  border-bottom: 1px solid var(--admin-line);
+}
+
+.logo {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.badge {
+  padding: 4px 10px;
+  border: 1px solid #cde1ee;
+  border-radius: 6px;
+  background: #eef6fb;
+  color: #1b638a;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.navigation {
+  padding: 28px 16px;
+}
+
+.navHeading {
+  margin: 0 14px 14px;
+  color: var(--admin-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.navList {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navButton {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 14px;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--admin-navy);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 150ms, color 150ms, border-color 150ms;
+}
+
+.navButton:hover {
+  border-color: #d5e7f2;
+  background: #edf5fa;
+  color: #176790;
+}
+
+.navButton:focus-visible {
+  outline: 2px solid var(--admin-blue);
+  outline-offset: 3px;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--admin-blue);
+}
+
+.sidebarNote {
+  margin: auto 24px 0;
+  padding: 24px 0;
+  border-top: 1px solid var(--admin-line);
+  color: var(--admin-muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.workspace {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px;
+}
+
+.content {
+  flex: 1;
+  padding: 32px;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding: 20px 32px;
+  border-top: 1px solid var(--admin-line);
+  background: #fff;
+  color: var(--admin-muted);
+  font-size: 12px;
+}
+
+.footer p {
+  margin: 0;
+}
+
+.footerBrand {
+  display: flex;
+  align-items: center;
+  color: #687480;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.footerBrand > span:first-child {
+  color: var(--admin-blue);
+}
+
+.footerDivider {
+  width: 1px;
+  height: 16px;
+  margin: 0 14px;
+  background: var(--admin-line);
+}
+
+.footerLabel {
+  color: var(--admin-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+:global(.dark) .shell {
+  --admin-navy: #e5edf6;
+  --admin-blue: #67b6e0;
+  --admin-muted: #a8b8cb;
+  --admin-line: #253c58;
+  background: #09192c;
+}
+
+:global(.dark) .sidebar,
+:global(.dark) .footer {
+  background: #10233b;
+}
+
+:global(.dark) .badge {
+  border-color: #2b506d;
+  background: #18324c;
+  color: #92c9e7;
+}
+
+:global(.dark) .navButton:hover {
+  border-color: #2b506d;
+  background: #18324c;
+  color: #92c9e7;
+}
+
+@media (max-width: 767px) {
+  .shell {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    flex-basis: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--admin-line);
+  }
+
+  .brand {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 20px;
+    padding: 20px 0;
+  }
+
+  .logo {
+    width: min(52%, 200px);
+  }
+
+  .badge {
+    flex-shrink: 0;
+  }
+
+  .navigation {
+    padding: 16px;
+  }
+
+  .navList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sidebarNote {
+    display: none;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  .footer {
+    padding: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navButton {
+    transition: none;
+  }
+}
