@@ -1,2 +1,51 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg: #ffffff;
+  --fg: #0a0a0a;
+  --card: #ffffff;
+  --muted: #3d4758;
+  --line: rgba(10, 10, 10, 0.16);
+  --brand: #1d4ed8;
+  --brand-hover: #1e3a8a;
+  --on-brand: #ffffff;
+  --field: #ffffff;
+  --danger: #9f1239;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #071633;
+  --fg: #ffffff;
+  --card: #0c214d;
+  --muted: #c5d2ea;
+  --line: rgba(255, 255, 255, 0.16);
+  --brand: #3b82f6;
+  --brand-hover: #60a5fa;
+  --on-brand: #ffffff;
+  --field: #08183d;
+  --danger: #fda4af;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-on-brand: var(--on-brand);
+  --color-field: var(--field);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-geist-sans);
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-geist-sans), sans-serif;
+}

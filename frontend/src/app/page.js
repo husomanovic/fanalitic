@@ -1,9 +1,5 @@
-import Image from "next/image";
+import LoginScreen from "@/components/LoginScreen";
 
 export default function Home() {
-  return (
-    <div className="">
-
-    </div>
-  );
+  return <LoginScreen />;
 }
