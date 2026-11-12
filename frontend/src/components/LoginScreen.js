@@ -2,7 +2,7 @@ import Image from "next/image";
 import LoginForm from "@/components/LoginForm";
 import ThemeToggle from "@/components/ThemeToggle";
 
-export default function LoginScreen() {
+export default function LoginScreen({ mode = "login" }) {
   return (
     <main className="relative flex flex-1 items-center justify-center px-4 py-16">
       <div className="absolute top-5 right-5">
@@ -28,11 +28,11 @@ export default function LoginScreen() {
         />
 
         <div className="mt-6 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
-          <p className="mt-2 text-sm text-muted">Admin account for FanAnalitic</p>
+          <h1 className="text-2xl font-semibold tracking-tight">{mode === "register" ? "Create account" : "Sign in"}</h1>
+          <p className="mt-2 text-sm text-muted">{mode === "register" ? "Register for the FanAnalitic admin panel" : "Admin account for FanAnalitic"}</p>
         </div>
 
-        <LoginForm />
+        <LoginForm mode={mode} />
       </section>
     </main>
   );
