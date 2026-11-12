@@ -46,7 +46,12 @@ export default function TicketEntry() {
       const data = await response.json().catch(() => ({}));
 
       if (response.status === 409 || data.review_used === true || data.reason === "ALREADY_REVIEWED") {
-        throw new Error("Ticket already used for review.");
+        if (response.ok && data.ticket) {
+          stopScan();
+          router.push(`/review/${encodeURIComponent(ticketCode)}`);
+          return;
+        }
+        throw new Error(data.message || "Ticket already used for review.");
       }
 
       if (!response.ok) {

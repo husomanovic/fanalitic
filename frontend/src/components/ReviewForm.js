@@ -3,6 +3,7 @@
 import { useState } from "react";
 import ScoreSlider from "./ScoreSlider";
 import ReviewShell from "./ReviewShell";
+import RewardWheel from "./RewardWheel";
 
 const SCORE_FIELDS = [
   {
@@ -133,27 +134,7 @@ export default function ReviewForm({ ticketCode, ticket = null }) {
   }
 
   if (submitted) {
-    return (
-      <ReviewShell>
-        <section className="panel animate-success mx-auto max-w-xl px-5 py-12 text-center sm:px-8">
-          <div
-            className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full text-2xl font-bold sm:h-16 sm:w-16"
-            style={{ background: "var(--primary-soft)", color: "var(--success)" }}
-          >
-            ✓
-          </div>
-          <h1 className="font-[family-name:var(--font-sora)] text-2xl font-semibold tracking-tight sm:text-3xl">
-            Thanks for your review
-          </h1>
-          <p
-            className="mx-auto mt-3 max-w-md text-sm leading-relaxed sm:text-base"
-            style={{ color: "var(--muted)" }}
-          >
-            Your voice helps the club and stadium improve the fan experience.
-          </p>
-        </section>
-      </ReviewShell>
-    );
+    return <ReviewShell><RewardWheel ticketCode={ticketCode} /></ReviewShell>;
   }
 
   return (

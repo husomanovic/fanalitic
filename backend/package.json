@@ -10,7 +10,8 @@
     "test": "node --test",
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "setup:auth": "node src/scripts/setup-auth.js"
+    "setup:auth": "node src/scripts/setup-auth.js",
+    "setup:rewards": "node src/scripts/setup-rewards.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

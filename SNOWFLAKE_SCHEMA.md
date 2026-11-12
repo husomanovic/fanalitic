@@ -297,3 +297,7 @@ POST /api/reviews (Node.js)
 - `LOGO_URL` values might be empty; the frontend should display a fallback logo.
 - `GAME_METRICS` values reflect the most recent successful refresh; they can lag behind `REVIEWS_FACT`.
 - The sample dataset is synthetic and must be labeled accordingly during presentation.
+
+## Ticket reward fields
+
+Run `backend/sql/rewards.sql` (or `npm run setup:rewards` in backend) to add `REWARD_ID VARCHAR(32)`, `REWARD_CODE VARCHAR(32)`, and `REWARD_SPUN_AT TIMESTAMP_TZ` to `PUBLIC_APP.TICKETS`. Existing values start NULL. The first conditional UPDATE where `REWARD_ID IS NULL` assigns the reward permanently; all retries read the saved result.

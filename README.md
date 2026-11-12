@@ -233,3 +233,43 @@ Expired session records can periodically be removed with:
 ```sql
 DELETE FROM PUBLIC_APP.ADMIN_SESSIONS WHERE EXPIRES_AT <= CURRENT_TIMESTAMP();
 ```
+
+## Review reward wheel
+
+After a ticket review is accepted, the fan can spin once for a future-ticket discount.
+Reopening a reviewed ticket through `/FANLYTICS` or `/review/[ticketId]` restores its
+unused spin or its saved reward. No fan account is required: the ticket code grants
+access to the review and reward, so keep ticket codes private.
+
+From `backend`, run `npm run setup:rewards` once with a role allowed to alter
+`PUBLIC_APP.TICKETS`. The migration adds nullable `REWARD_ID`, `REWARD_CODE`, and
+`REWARD_SPUN_AT` columns without replacing tickets or reviews. The API role needs
+SELECT and UPDATE access to the ticket table. Review ingestion remains unchanged.
+
+| Discount on one future ticket | Chance |
+|---|---|
+| 5% | 50% |
+| 10% | 28% |
+| 15% | 15% |
+| 20% | 6% |
+| 30% | 0.9% |
+| 100% | 0.1% (exactly 1 in 1,000) |
+
+The backend draws an unbiased integer from 0 to 999 using Node's cryptographic RNG.
+Only a conditional UPDATE of the existing, unclaimed ticket can persist a result;
+retries and competing requests return the stored reward, never replace it. Reward
+selection and reference generation are server-only. Each ticket must have a unique
+ID/barcode combination. If a write succeeds but its response is lost, reload or use
+"Check my reward" to recover the same result. The wheel shows the exact chances;
+its displayed segments are equal in size for legibility.
+
+Endpoints: `GET /api/tickets/:barcode/reward` returns the catalog and ticket state;
+`POST /api/tickets/:barcode/spin` saves or returns that ticket's reward. Both disable
+caching. Spinning requires a review in the raw ingestion, operational, or read-ready
+review tables, including reviews still being processed. Rewards are independent of
+review scores. The spin endpoint is rate limited and uses the existing origin check.
+
+The saved reference identifies the reward for club staff. Checkout integration,
+validation of redemption, and marking a reward redeemed are not implemented; the
+UI states that redemption needs club confirmation. Configure actual promotion
+terms before offering these discounts commercially.

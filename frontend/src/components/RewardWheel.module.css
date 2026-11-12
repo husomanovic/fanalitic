@@ -1,0 +1,267 @@
+.panel {
+  padding: clamp(24px, 5vw, 52px);
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.intro {
+  max-width: 610px;
+  margin: 0 auto 36px;
+  text-align: center;
+}
+
+.eyebrow {
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0 0 12px;
+}
+
+.intro h1 {
+  font-family: var(--font-sora), sans-serif;
+  font-size: clamp(25px, 4vw, 36px);
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+  margin: 0 0 16px;
+}
+
+.intro > p:last-child,
+.details p,
+.odds > p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: center;
+}
+
+.playArea {
+  min-width: 0;
+  text-align: center;
+}
+
+.wheelFrame {
+  position: relative;
+  max-width: 360px;
+  margin: 0 auto 26px;
+  aspect-ratio: 1;
+  filter: drop-shadow(0 12px 20px rgba(16, 51, 94, 0.16));
+}
+
+.wheel {
+  width: 100%;
+  display: block;
+}
+
+.spinning {
+  transition: transform 4.5s cubic-bezier(0.12, 0.75, 0.12, 1);
+}
+
+.pointer {
+  position: absolute;
+  z-index: 2;
+  top: -4px;
+  left: calc(50% - 13px);
+  width: 0;
+  height: 0;
+  border-left: 13px solid transparent;
+  border-right: 13px solid transparent;
+  border-top: 28px solid var(--fg);
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+}
+
+.hub {
+  position: absolute;
+  inset: 38%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 5px solid var(--surface);
+  border-radius: 50%;
+  background: #10335e;
+  color: white;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.2);
+}
+
+.hub span {
+  font-size: clamp(16px, 3vw, 23px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.hub small {
+  font-size: 7px;
+  letter-spacing: 0.12em;
+}
+
+.spinButton {
+  min-height: 48px;
+  width: 100%;
+  max-width: 340px;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 14px;
+  color: white;
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.spinButton:disabled {
+  cursor: default;
+  opacity: 0.65;
+}
+
+.spinButton:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 4px;
+}
+
+.smallPrint {
+  margin: 12px auto 0;
+  color: var(--muted);
+  font-size: 11px !important;
+  line-height: 1.6;
+  max-width: 340px;
+  overflow-wrap: anywhere;
+}
+
+.status {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.error {
+  margin-top: 12px;
+  color: var(--danger);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.highlight,
+.result {
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--primary-soft);
+}
+
+.highlight h2,
+.result h2 {
+  margin: 14px 0 8px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.result h2 {
+  font-size: 40px;
+  color: var(--primary);
+}
+
+.rareBadge {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: #f6d789;
+  color: #5c4007;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.referenceLabel {
+  display: block;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.reference {
+  display: block;
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px dashed var(--primary);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--fg);
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  user-select: all;
+}
+
+.odds {
+  margin-top: 24px;
+}
+
+.odds h2 {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.odds > p {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.odds ul {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+}
+
+.odds li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.odds li > span:last-child {
+  color: var(--muted);
+}
+
+.prizeName {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 600;
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+@media (max-width: 700px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wheelFrame {
+    max-width: 300px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinning {
+    transition: none;
+  }
+}
