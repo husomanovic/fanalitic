@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import ticketRoutes from './routes/tickets.js';
 import reviewRoutes from './routes/reviews.js';
+import rewardRoutes from './routes/rewards.js';
 import analyticsRoutes from './routes/analytics.js';
 import catalogRoutes from './routes/catalog.js';
 import { authStore } from './auth/store.js';
@@ -22,6 +23,7 @@ export function createApp({ secret, origin, production = false, store = authStor
     next();
   });
   app.use('/api/auth', createAuthRouter({ store, secret, production }));
+  app.use('/api/tickets', rewardRoutes);
   app.use('/api/tickets', ticketRoutes);
   app.use('/api/reviews', reviewRoutes);
   app.use('/api/analytics', requireAdmin(store, secret), analyticsRoutes);

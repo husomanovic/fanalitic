@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import ReviewForm from "./ReviewForm";
 import ReviewShell from "./ReviewShell";
+import RewardWheel from "./RewardWheel";
 import { parseTicketCode } from "../lib/ticketCode";
 
 export default function ReviewByTicket() {
@@ -72,6 +73,10 @@ export default function ReviewByTicket() {
       cancelled = true;
     };
   }, [ticketCode]);
+
+  if (status === "used" && ticketCode) {
+    return <ReviewShell><RewardWheel key={ticketCode} ticketCode={ticketCode} /></ReviewShell>;
+  }
 
   if (status === "ready" && ticketCode) {
     return <ReviewForm ticketCode={ticketCode} ticket={ticket} />;
