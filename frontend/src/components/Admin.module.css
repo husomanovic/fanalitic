@@ -10,9 +10,15 @@
 }
 
 .sidebar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
   display: flex;
   flex: 0 0 260px;
   flex-direction: column;
+  align-self: flex-start;
+  height: 100dvh;
+  overflow: auto;
   border-right: 1px solid var(--admin-line);
   background: #fff;
 }
@@ -28,9 +34,24 @@
 }
 
 .logo {
-  display: block;
   width: 100%;
   height: auto;
+}
+
+.logoLight {
+  display: block;
+}
+
+.logoDark {
+  display: none;
+}
+
+:global(.dark) .logoLight {
+  display: none;
+}
+
+:global(.dark) .logoDark {
+  display: block;
 }
 
 .badge {
@@ -81,8 +102,15 @@
   font-size: 14px;
   font-weight: 500;
   text-align: left;
+  text-decoration: none;
   cursor: pointer;
   transition: background-color 150ms, color 150ms, border-color 150ms;
+}
+
+.navButtonActive {
+  border-color: #cde1ee;
+  background: #eef6fb;
+  color: #176790;
 }
 
 .navButton:hover {
@@ -128,6 +156,21 @@
 .content {
   flex: 1;
   padding: 32px;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.pageLead {
+  max-width: 42rem;
+  margin: 10px 0 0;
+  color: var(--admin-muted);
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 .footer {
@@ -191,7 +234,8 @@
   color: #92c9e7;
 }
 
-:global(.dark) .navButton:hover {
+:global(.dark) .navButton:hover,
+:global(.dark) .navButtonActive {
   border-color: #2b506d;
   background: #18324c;
   color: #92c9e7;
@@ -203,7 +247,10 @@
   }
 
   .sidebar {
+    position: static;
     flex-basis: auto;
+    height: auto;
+    overflow: visible;
     border-right: 0;
     border-bottom: 1px solid var(--admin-line);
   }
